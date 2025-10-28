@@ -2,7 +2,7 @@ import React from 'react';
 import {
   Heart,
   Eye,
-  Home,
+  DollarSign,
   AlertTriangle,
   Menu,
   Activity,
@@ -13,9 +13,10 @@ import {
 interface LandingPageProps {
   onAtencaoPrimariaClick: () => void;
   onVigilanciaClick: () => void;
+  onRepassesFinanceirosClick: () => void;
 }
 
-export const LandingPage: React.FC<LandingPageProps> = ({ onAtencaoPrimariaClick, onVigilanciaClick }) => {
+export const LandingPage: React.FC<LandingPageProps> = ({ onAtencaoPrimariaClick, onVigilanciaClick, onRepassesFinanceirosClick }) => {
   return (
     <div className="min-h-screen relative text-white">
       {/* Background Image with Blue Overlay */}
@@ -43,23 +44,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onAtencaoPrimariaClick
                 />
               </div>
               
-              {/* Menu Centralizado */}
-              <div className="flex-1 flex justify-center">
-                <div className="text-sm font-medium space-x-6 hidden md:flex">
-                  <a href="#" className="hover:text-blue-300 transition-colors">
-                    PAINÉIS EPIDEMIOLÓGICOS
-                  </a>
-                  <a href="#" className="hover:text-blue-300 transition-colors">
-                    CONDIÇÕES DE SAÚDE
-                  </a>
-                  <a href="#" className="hover:text-blue-300 transition-colors">
-                    DESEMPENHO DO MUNICÍPIO
-                  </a>
-                  <a href="#" className="hover:text-blue-300 transition-colors">
-                    REPASSES FINANCEIROS
-                  </a>
-                </div>
-              </div>
+              {/* Menu vazio - removido */}
+              <div className="flex-1"></div>
               
               {/* Mobile Menu Button */}
               <div className="flex items-center space-x-4">
@@ -121,29 +107,34 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onAtencaoPrimariaClick
               </div>
             </button>
 
-            {/* Especializada */}
-            <div className="group">
-              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 hover:bg-white/20 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl border border-white/20">
+            {/* Repasses Financeiros */}
+            <button onClick={onRepassesFinanceirosClick} className="group w-full">
+              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 hover:bg-white/20 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl border border-white/20 cursor-pointer">
                 <div className="text-center">
-                  <div className="w-16 h-16 bg-indigo-500 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-indigo-400 transition-colors">
-                    <Home size={28} className="text-white" />
+                  <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-green-400 transition-colors">
+                    <DollarSign size={28} className="text-white" />
                   </div>
                   <h3 className="text-lg font-bold mb-3 text-white">
-                    ESPECIALIZADA
+                    REPASSES FINANCEIROS
                   </h3>
                   <div className="space-y-2 text-sm text-blue-100">
-                    <p>Profissionais e</p>
-                    <p>Dados de Atenção Especializada</p>
+                    <p>Visualize os Dados</p>
+                    <p>de Repasses Financeiros</p>
                   </div>
                 </div>
               </div>
-            </div>
+            </button>
 
-            {/* Notificação */}
-            <div className="group">
+            {/* Arboviroses */}
+            <a
+              href="https://arbonotifica.sems.dourados.ms.gov.br/app/auth/login/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group block"
+            >
               <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 hover:bg-white/20 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl border border-white/20">
                 <div className="text-center">
-                  <div className="w-16 h-16 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-purple-400 transition-colors">
+                  <div className="w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-orange-400 transition-colors">
                     <AlertTriangle size={28} className="text-white" />
                   </div>
                   <h3 className="text-lg font-bold mb-3 text-white">
@@ -155,7 +146,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onAtencaoPrimariaClick
                   </div>
                 </div>
               </div>
-            </div>
+            </a>
           </div>
 
           {/* Additional Info Section */}
