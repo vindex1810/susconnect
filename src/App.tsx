@@ -3,15 +3,17 @@ import { useState, useEffect } from 'react';
 import { Login } from './components/Login';
 import { Dashboard } from './components/Dashboard';
 import { LandingPage } from './components/LandingPage';
-import { PowerBIViewer } from './components/PowerBIViewer';
+import { FullScreenPowerBI } from './components/FullScreenPowerBI';
 import { supabase } from './lib/supabase';
+
+type PowerBIReport = 'vigilancia' | 'repasses' | 'atencao' | null;
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [currentView, setCurrentView] = useState<'landing' | 'dashboard'>('landing');
+  const [currentView, setCurrentView] = useState<'landing' | 'dashboard' | 'powerbi'>('landing');
   const [currentUser, setCurrentUser] = useState('');
-  const [isPowerBIOpen, setIsPowerBIOpen] = useState(false);
+  const [activePowerBIReport, setActivePowerBIReport] = useState<PowerBIReport>(null);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -50,14 +52,17 @@ function App() {
 
   const navigateToLanding = () => {
     setCurrentView('landing');
+    setActivePowerBIReport(null);
   };
 
-  const openPowerBI = () => {
-    setIsPowerBIOpen(true);
+  const openPowerBIReport = (reportType: 'vigilancia' | 'repasses' | 'atencao') => {
+    setActivePowerBIReport(reportType);
+    setCurrentView('powerbi');
   };
 
-  const closePowerBI = () => {
-    setIsPowerBIOpen(false);
+  const closePowerBIReport = () => {
+    setActivePowerBIReport(null);
+    setCurrentView('landing');
   };
 
   if (isLoading) {
@@ -75,23 +80,33 @@ function App() {
     return <Login onLoginSuccess={handleLoginSuccess} />;
   }
 
+  if (currentView === 'powerbi' && activePowerBIReport) {
+    const titles = {
+      vigilancia: 'Vigilância em Saúde',
+      repasses: 'Repasses Financeiros',
+      atencao: 'Atenção Primária'
+    };
+
+    return (
+      <FullScreenPowerBI
+        reportType={activePowerBIReport}
+        title={titles[activePowerBIReport]}
+        onBack={closePowerBIReport}
+      />
+    );
+  }
+
   return (
     <div>
       {currentView === 'dashboard' ? (
         <Dashboard username={currentUser} onLogout={handleLogout} onBack={navigateToLanding} />
       ) : (
         <LandingPage
-          onAtencaoPrimariaClick={navigateToDashboard}
-          onVigilanciaClick={openPowerBI}
+          onAtencaoPrimariaClick={() => openPowerBIReport('atencao')}
+          onVigilanciaClick={() => openPowerBIReport('vigilancia')}
+          onRepassesFinanceirosClick={() => openPowerBIReport('repasses')}
         />
       )}
-
-      <PowerBIViewer
-        isOpen={isPowerBIOpen}
-        onClose={closePowerBI}
-        powerBIUrl="https://app.powerbi.com/view?r=eyJrIjoiZjY2YTUwM2QtMWQyZS00MDQ2LWE5NDctMGRjYWFmZTU3YjQwIiwidCI6IjVkOGE4N2Q5LTZkODAtNDM5My05ZjNkLTUyOWE3MjU1MmQ3ZiJ9"
-        title="Vigilância em Saúde - Power BI"
-      />
     </div>
   );
 }
