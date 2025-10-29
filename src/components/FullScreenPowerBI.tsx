@@ -21,39 +21,19 @@ export const FullScreenPowerBI: React.FC<FullScreenPowerBIProps> = ({
    const fetchPowerBIUrl = async () => {
   try {
     setIsLoading(true);
-    setError('');
-
-    // ✅ URL DIRETA (sem variáveis de ambiente)
+    
+    // URL direta para a function
     const functionUrl = `https://yimjmqkwlptdaswljgty.supabase.co/functions/v1/powerbi-proxy?report=${reportType}`;
-
-    console.log('Fetching from:', functionUrl);
-
-    // ✅ SEM headers de Authorization - request simples
+    
     const response = await fetch(functionUrl);
-
-    console.log('Response status:', response.status);
-
-    if (!response.ok) {
-      throw new Error(`Falha ao carregar relatório: ${response.status}`);
-    }
-
-    // ✅ IMPORTANTE: Agora recebemos HTML, não JSON!
     const html = await response.text();
     
-    console.log('HTML received, length:', html.length);
-    
-    // ✅ Cria URL blob para o HTML
-    const blob = new Blob([html], { type: 'text/html' });
-    const url = URL.createObjectURL(blob);
-    
-    console.log('Blob URL created:', url);
-    
-    setPowerBIUrl(url);
+    // Cria iframe diretamente com a URL da function
+    setPowerBIUrl(functionUrl); // ⚠️ Mude para isto temporariamente
     setIsLoading(false);
     
   } catch (err) {
-    console.error('Error in fetchPowerBIUrl:', err);
-    setError('Erro ao carregar o relatório. Tente novamente.');
+    setError('Erro ao carregar relatório');
     setIsLoading(false);
   }
 };
