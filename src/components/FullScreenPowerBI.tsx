@@ -7,66 +7,39 @@ interface FullScreenPowerBIProps {
   onBack: () => void;
 }
 
+// Mapeamento das URLs públicas do Power BI
+const REPORT_URLS = {
+  vigilancia: 'https://app.powerbi.com/view?r=eyJrIjoiZjY2YTUwM2QtMWQyZS00MDQ2LWE5NDctMGRjYWFmZTU3YjQwIiwidCI6IjVkOGE4N2Q5LTZkODAtNDM5My05ZjNkLTUyOWE3MjU1MmQ3ZiJ9',
+  repasses: 'https://app.powerbi.com/view?r=eyJrIjoiNzRmODJmZDEtYzFkZS00MjkyLWEwMDYtNzRhNzJiMjAxZWMwIiwidCI6IjVkOGE4N2Q5LTZkODAtNDM5My05ZjNkLTUyOWE3MjU1MmQ3ZiJ9', // ATUALIZE ESTA URL
+  atencao: 'https://app.powerbi.com/view?r=eyJrIjoiYzIyZTdiOTMtN2QxMS00NDcyLWJkZDEtNjdkM2M0MjNlMDNmIiwidCI6IjVkOGE4N2Q5LTZkODAtNDM5My05ZjNkLTUyOWE3MjU1MmQ3ZiJ9' // ATUALIZE ESTA URL
+};
+
 export const FullScreenPowerBI: React.FC<FullScreenPowerBIProps> = ({
   reportType,
   title,
   onBack
 }) => {
-  const [powerBIUrl, setPowerBIUrl] = useState<string>('');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string>('');
 
   useEffect(() => {
-    const fetchPowerBIUrl = async () => {
-      try {
-        setIsLoading(true);
-        setError('');
+    // Reset states quando o reportType mudar
+    setIsLoading(true);
+    setError('');
+  }, [reportType]);
 
-        console.log('🔄 Starting fetch for report:', reportType);
+  const handleIframeLoad = () => {
+    console.log('✅ Power BI carregado com sucesso!');
+    setIsLoading(false);
+  };
 
-        // URL da Edge Function
-        const functionUrl = `https://yimjmqkwlptdaswljgty.supabase.co/functions/v1/powerbi-proxy?report=${reportType}`;
+  const handleIframeError = () => {
+    console.error('❌ Erro ao carregar Power BI');
+    setError('Erro ao carregar o relatório. Verifique a conexão e tente novamente.');
+    setIsLoading(false);
+  };
 
-        console.log('📡 Fetching from:', functionUrl);
-
-        const response = await fetch(functionUrl);
-        console.log('✅ Response status:', response.status);
-
-        if (!response.ok) {
-          throw new Error(`HTTP Error: ${response.status}`);
-        }
-
-        // Recebe HTML
-        const html = await response.text();
-        console.log('📄 HTML received, length:', html.length);
-        
-        // Cria URL blob
-        const blob = new Blob([html], { type: 'text/html' });
-        const url = URL.createObjectURL(blob);
-        
-        console.log('🔗 Blob URL created:', url);
-        
-        setPowerBIUrl(url);
-        setIsLoading(false);
-        console.log('🎉 State updated, iframe should load');
-        
-      } catch (err) {
-        console.error('❌ Error:', err);
-        setError('Erro ao carregar o relatório. Tente novamente.');
-        setIsLoading(false);
-      }
-    };
-
-    fetchPowerBIUrl();
-
-    // Cleanup
-    return () => {
-      if (powerBIUrl) {
-        URL.revokeObjectURL(powerBIUrl);
-        console.log('🧹 Cleanup: blob URL revoked');
-      }
-    };
-  }, [reportType, powerBIUrl]);
+  const reportUrl = REPORT_URLS[reportType];
 
   return (
     <div className="h-screen bg-gray-900 flex flex-col">
@@ -93,7 +66,7 @@ export const FullScreenPowerBI: React.FC<FullScreenPowerBIProps> = ({
           <div className="flex-1 flex items-center justify-center bg-gray-900">
             <div className="text-center">
               <Loader2 className="w-12 h-12 text-blue-500 animate-spin mx-auto mb-4" />
-              <p className="text-white text-lg">Carregando relatório...</p>
+              <p className="text-white text-lg">Carregando relatório Power BI...</p>
             </div>
           </div>
         )}
@@ -113,16 +86,21 @@ export const FullScreenPowerBI: React.FC<FullScreenPowerBIProps> = ({
           </div>
         )}
 
-        {!isLoading && !error && powerBIUrl && (
-          <div className="flex-1 min-h-0">
+        {/* Iframe do Power BI */}
+        {!error && (
+          <div 
+            className="flex-1 min-h-0" 
+            style={{ display: isLoading ? 'none' : 'block' }}
+          >
             <iframe
-              src={powerBIUrl}
+              key={reportType} // Força recarregar quando mudar o relatório
+              src={reportUrl}
               className="w-full h-full border-0"
               allowFullScreen
-              title={title}
-              sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
-              onLoad={() => console.log('✅ Iframe loaded successfully!')}
-              onError={(e) => console.error('❌ Iframe error:', e)}
+              title={`Relatório Power BI - ${title}`}
+              onLoad={handleIframeLoad}
+              onError={handleIframeError}
+              sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
             />
           </div>
         )}
