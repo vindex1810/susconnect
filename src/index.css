@@ -1,9 +1,25 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-/* Remover branding do Bolt */
-iframe[src*="bolt"], 
-[class*="bolt"], 
-a[href*="bolt.host"] {
+/* Remover botão "Made by Bolt" */
+a[href*="bolt.host"], 
+div[class*="bolt"], 
+[class*="bolt-widget"],
+footer a[href*="bolt"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
+/* Alternativa mais agressiva */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  position: relative;
+}
+
+body::after {
   display: none !important;
 }
