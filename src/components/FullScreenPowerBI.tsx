@@ -44,8 +44,14 @@ export const FullScreenPowerBI: React.FC<FullScreenPowerBIProps> = ({
           throw new Error('Falha ao carregar relatório');
         }
 
-        const data = await response.json();
-        setPowerBIUrl(data.url);
+        // ✅ MODIFICADO: Agora recebemos HTML em vez de JSON
+        const html = await response.text();
+        
+        // ✅ MODIFICADO: Criar uma URL blob para o HTML recebido
+        const blob = new Blob([html], { type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+        
+        setPowerBIUrl(url);
         setIsLoading(false);
       } catch (err) {
         console.error('Error fetching Power BI URL:', err);
@@ -55,11 +61,18 @@ export const FullScreenPowerBI: React.FC<FullScreenPowerBIProps> = ({
     };
 
     fetchPowerBIUrl();
-  }, [reportType]);
+
+    // ✅ ADICIONADO: Cleanup function para revogar a URL blob
+    return () => {
+      if (powerBIUrl) {
+        URL.revokeObjectURL(powerBIUrl);
+      }
+    };
+  }, [reportType, powerBIUrl]); // ✅ ADICIONADO: powerBIUrl nas dependências
 
   return (
-    <div className="h-screen bg-gray-900 flex flex-col"> {/* Alterado min-h-screen para h-screen */}
-      <header className="bg-blue-900 text-white shadow-lg z-10 flex-shrink-0"> {/* Adicionado flex-shrink-0 */}
+    <div className="h-screen bg-gray-900 flex flex-col">
+      <header className="bg-blue-900 text-white shadow-lg z-10 flex-shrink-0">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
@@ -77,8 +90,7 @@ export const FullScreenPowerBI: React.FC<FullScreenPowerBIProps> = ({
         </div>
       </header>
 
-      {/* Container principal com altura flexível */}
-      <div className="flex-1 flex flex-col min-h-0"> {/* Adicionado flex-1 e min-h-0 */}
+      <div className="flex-1 flex flex-col min-h-0">
         {isLoading && (
           <div className="flex-1 flex items-center justify-center bg-gray-900">
             <div className="text-center">
@@ -104,12 +116,14 @@ export const FullScreenPowerBI: React.FC<FullScreenPowerBIProps> = ({
         )}
 
         {!isLoading && !error && powerBIUrl && (
-          <div className="flex-1 min-h-0"> {/* Container para o iframe */}
+          <div className="flex-1 min-h-0">
             <iframe
               src={powerBIUrl}
               className="w-full h-full border-0"
               allowFullScreen
               title={title}
+              // ✅ ADICIONADO: sandbox para segurança
+              sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
             />
           </div>
         )}
