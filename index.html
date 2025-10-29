@@ -10,5 +10,12 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <style>
+  /* Remover elementos do Bolt */
+  [id*="bolt"], [class*="bolt"], iframe[src*="bolt"] {
+    display: none !important;
+    visibility: hidden !important;
+  }
+</style>
   </body>
 </html>
