@@ -58,8 +58,8 @@ export const FullScreenPowerBI: React.FC<FullScreenPowerBIProps> = ({
   }, [reportType]);
 
   return (
-    <div className="min-h-screen bg-gray-900 flex flex-col">
-      <header className="bg-blue-900 text-white shadow-lg z-10">
+    <div className="h-screen bg-gray-900 flex flex-col"> {/* Alterado min-h-screen para h-screen */}
+      <header className="bg-blue-900 text-white shadow-lg z-10 flex-shrink-0"> {/* Adicionado flex-shrink-0 */}
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
@@ -77,9 +77,10 @@ export const FullScreenPowerBI: React.FC<FullScreenPowerBIProps> = ({
         </div>
       </header>
 
-      <div className="flex-1 relative">
+      {/* Container principal com altura flexível */}
+      <div className="flex-1 flex flex-col min-h-0"> {/* Adicionado flex-1 e min-h-0 */}
         {isLoading && (
-          <div className="absolute inset-0 flex items-center justify-center bg-gray-900">
+          <div className="flex-1 flex items-center justify-center bg-gray-900">
             <div className="text-center">
               <Loader2 className="w-12 h-12 text-blue-500 animate-spin mx-auto mb-4" />
               <p className="text-white text-lg">Carregando relatório...</p>
@@ -88,7 +89,7 @@ export const FullScreenPowerBI: React.FC<FullScreenPowerBIProps> = ({
         )}
 
         {error && (
-          <div className="absolute inset-0 flex items-center justify-center bg-gray-900">
+          <div className="flex-1 flex items-center justify-center bg-gray-900">
             <div className="text-center max-w-md mx-auto px-6">
               <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
               <p className="text-white text-lg mb-4">{error}</p>
@@ -103,12 +104,14 @@ export const FullScreenPowerBI: React.FC<FullScreenPowerBIProps> = ({
         )}
 
         {!isLoading && !error && powerBIUrl && (
-          <iframe
-            src={powerBIUrl}
-            className="w-full h-full border-0"
-            allowFullScreen
-            title={title}
-          />
+          <div className="flex-1 min-h-0"> {/* Container para o iframe */}
+            <iframe
+              src={powerBIUrl}
+              className="w-full h-full border-0"
+              allowFullScreen
+              title={title}
+            />
+          </div>
         )}
       </div>
     </div>
