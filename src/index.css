@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+/* Remover branding do Bolt */
+iframe[src*="bolt"], 
+[class*="bolt"], 
+a[href*="bolt.host"] {
+  display: none !important;
+}
