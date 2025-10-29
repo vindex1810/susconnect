@@ -18,35 +18,47 @@ export const FullScreenPowerBI: React.FC<FullScreenPowerBIProps> = ({
   const [error, setError] = useState<string>('');
 
   useEffect(() => {
-   const fetchPowerBIUrl = async () => {
-  try {
-    setIsLoading(true);
-    
-    // URL direta para a function
-    const functionUrl = `https://yimjmqkwlptdaswljgty.supabase.co/functions/v1/powerbi-proxy?report=${reportType}`;
-    
-    const response = await fetch(functionUrl);
-    const html = await response.text();
-    
-    // Cria iframe diretamente com a URL da function
-    setPowerBIUrl(functionUrl); // ⚠️ Mude para isto temporariamente
-    setIsLoading(false);
-    
-  } catch (err) {
-    setError('Erro ao carregar relatório');
-    setIsLoading(false);
-  }
-};
+    const fetchPowerBIUrl = async () => {
+      try {
+        setIsLoading(true);
+        setError('');
+
+        // URL direta para a function
+        const functionUrl = `https://yimjmqkwlptdaswljgty.supabase.co/functions/v1/powerbi-proxy?report=${reportType}`;
+
+        console.log('Fetching Power BI from:', functionUrl);
+
+        const response = await fetch(functionUrl);
+
+        if (!response.ok) {
+          throw new Error(`Falha ao carregar relatório: ${response.status}`);
+        }
+
+        // Recebe HTML e cria blob URL
+        const html = await response.text();
+        const blob = new Blob([html], { type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+        
+        console.log('Blob URL created, setting iframe source');
+        setPowerBIUrl(url);
+        setIsLoading(false);
+        
+      } catch (err) {
+        console.error('Error fetching Power BI:', err);
+        setError('Erro ao carregar o relatório. Tente novamente.');
+        setIsLoading(false);
+      }
+    };
 
     fetchPowerBIUrl();
 
-    // ✅ ADICIONADO: Cleanup function para revogar a URL blob
+    // Cleanup
     return () => {
       if (powerBIUrl) {
         URL.revokeObjectURL(powerBIUrl);
       }
     };
-  }, [reportType, powerBIUrl]); // ✅ ADICIONADO: powerBIUrl nas dependências
+  }, [reportType, powerBIUrl]);
 
   return (
     <div className="h-screen bg-gray-900 flex flex-col">
@@ -100,8 +112,9 @@ export const FullScreenPowerBI: React.FC<FullScreenPowerBIProps> = ({
               className="w-full h-full border-0"
               allowFullScreen
               title={title}
-              // ✅ ADICIONADO: sandbox para segurança
               sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
+              onLoad={() => console.log('Iframe loaded successfully')}
+              onError={(e) => console.error('Iframe error:', e)}
             />
           </div>
         )}
