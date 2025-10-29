@@ -34,9 +34,8 @@ export const FullScreenPowerBI: React.FC<FullScreenPowerBIProps> = ({
         const functionUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/powerbi-proxy?report=${reportType}`;
 
         const response = await fetch(functionUrl, {
-          headers: {
-            'Authorization': `Bearer ${session.access_token}`,
-            'Content-Type': 'application/json',
+  headers: {
+    'Content-Type': 'application/json',
           },
         });
 
