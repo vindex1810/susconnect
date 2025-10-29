@@ -9,7 +9,8 @@ import {
   Shield,
   MapPin,
   LogOut,
-  Mail
+  Mail,
+  Map
 } from 'lucide-react';
 
 interface LandingPageProps {
@@ -31,6 +32,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   const formatEmail = (email: string) => {
     const atIndex = email.indexOf('@');
     return atIndex > 0 ? email.substring(0, atIndex) : email;
+  };
+
+  const openUBSMap = () => {
+    window.open('https://www.google.com/maps/d/u/0/viewer?hl=pt-BR&mid=1aOdQQ9s9vBtyibgLy5cPTEMU2Oqq6mw&ll=-22.23198731693114%2C-54.83619882987065&z=13', '_blank');
   };
 
   return (
@@ -60,17 +65,35 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 />
               </div>
               
-              {/* User Info and Logout */}
+              {/* User Info and Actions */}
               <div className="flex items-center space-x-4">
                 {userEmail && (
                   <div className="flex items-center space-x-3">
+                    {/* Ícone do usuário e email */}
                     <div className="flex items-center space-x-2 text-blue-100">
                       <Mail size={16} className="text-blue-200" />
                       <span className="text-sm font-medium">
                         {formatEmail(userEmail)}
                       </span>
                     </div>
+                    
+                    {/* Separador */}
                     <div className="w-px h-6 bg-blue-400/50"></div>
+                    
+                    {/* Botão do Mapa UBS */}
+                    <button
+                      onClick={openUBSMap}
+                      className="flex items-center space-x-2 bg-green-600/80 hover:bg-green-700/80 px-3 py-2 rounded-lg transition-colors duration-200 backdrop-blur-sm"
+                      title="Mapa Territorial das UBSs"
+                    >
+                      <Map size={16} className="text-white" />
+                      <span className="text-sm font-medium text-white">Mapa UBS</span>
+                    </button>
+
+                    {/* Separador */}
+                    <div className="w-px h-6 bg-blue-400/50"></div>
+                    
+                    {/* Botão de Logout */}
                     <button
                       onClick={onLogout}
                       className="flex items-center space-x-2 bg-red-600/80 hover:bg-red-700/80 px-3 py-2 rounded-lg transition-colors duration-200 backdrop-blur-sm"
@@ -80,6 +103,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                     </button>
                   </div>
                 )}
+                
+                {/* Mobile Menu Button */}
                 <button className="md:hidden">
                   <Menu size={24} />
                 </button>
@@ -87,8 +112,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             </nav>
           </div>
         </header>
-
-        {/* 🚨 ADICIONE ESTAS SEÇÕES QUE ESTAVAM FALTANDO 🚨 */}
 
         {/* Hero Section */}
         <main className="container mx-auto px-4 py-16">
@@ -220,6 +243,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         <footer className="bg-blue-950/70 backdrop-blur-sm border-t border-blue-700/30 mt-20">
           <div className="container mx-auto px-4 py-8">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
+              {/* Logos à esquerda */}
               <div className="flex items-start space-x-4 mb-4 md:mb-0">
                 <img 
                   src="/sems-logo.png" 
@@ -236,6 +260,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 </div>
               </div>
               
+              {/* Links à direita */}
               <div className="flex space-x-6 text-sm">
                 <a href="#" className="text-blue-200 hover:text-white transition-colors">
                   Política de Privacidade
