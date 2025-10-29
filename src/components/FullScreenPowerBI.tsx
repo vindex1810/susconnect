@@ -18,46 +18,45 @@ export const FullScreenPowerBI: React.FC<FullScreenPowerBIProps> = ({
   const [error, setError] = useState<string>('');
 
   useEffect(() => {
-    const fetchPowerBIUrl = async () => {
-      try {
-        setIsLoading(true);
-        setError('');
+   const fetchPowerBIUrl = async () => {
+  try {
+    setIsLoading(true);
+    setError('');
 
-        const { data: { session } } = await supabase.auth.getSession();
+    // ✅ URL DIRETA (sem variáveis de ambiente)
+    const functionUrl = `https://yimjmqkwlptdaswljgty.supabase.co/functions/v1/powerbi-proxy?report=${reportType}`;
 
-        if (!session) {
-          setError('Você precisa estar autenticado para visualizar este relatório.');
-          setIsLoading(false);
-          return;
-        }
+    console.log('Fetching from:', functionUrl);
 
-        const functionUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/powerbi-proxy?report=${reportType}`;
+    // ✅ SEM headers de Authorization - request simples
+    const response = await fetch(functionUrl);
 
-        const response = await fetch(functionUrl, {
-  headers: {
-    'Content-Type': 'application/json',
-          },
-        });
+    console.log('Response status:', response.status);
 
-        if (!response.ok) {
-          throw new Error('Falha ao carregar relatório');
-        }
+    if (!response.ok) {
+      throw new Error(`Falha ao carregar relatório: ${response.status}`);
+    }
 
-        // ✅ MODIFICADO: Agora recebemos HTML em vez de JSON
-        const html = await response.text();
-        
-        // ✅ MODIFICADO: Criar uma URL blob para o HTML recebido
-        const blob = new Blob([html], { type: 'text/html' });
-        const url = URL.createObjectURL(blob);
-        
-        setPowerBIUrl(url);
-        setIsLoading(false);
-      } catch (err) {
-        console.error('Error fetching Power BI URL:', err);
-        setError('Erro ao carregar o relatório. Tente novamente.');
-        setIsLoading(false);
-      }
-    };
+    // ✅ IMPORTANTE: Agora recebemos HTML, não JSON!
+    const html = await response.text();
+    
+    console.log('HTML received, length:', html.length);
+    
+    // ✅ Cria URL blob para o HTML
+    const blob = new Blob([html], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    
+    console.log('Blob URL created:', url);
+    
+    setPowerBIUrl(url);
+    setIsLoading(false);
+    
+  } catch (err) {
+    console.error('Error in fetchPowerBIUrl:', err);
+    setError('Erro ao carregar o relatório. Tente novamente.');
+    setIsLoading(false);
+  }
+};
 
     fetchPowerBIUrl();
 
