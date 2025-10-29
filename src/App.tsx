@@ -105,6 +105,8 @@ function App() {
           onAtencaoPrimariaClick={() => openPowerBIReport('atencao')}
           onVigilanciaClick={() => openPowerBIReport('vigilancia')}
           onRepassesFinanceirosClick={() => openPowerBIReport('repasses')}
+          userEmail={currentUser}
+          onLogout={handleLogout}
         />
       )}
     </div>
