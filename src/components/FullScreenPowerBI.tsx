@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { ArrowLeft, Loader2, AlertCircle } from 'lucide-react';
-import { supabase } from '../lib/supabase';
 
 interface FullScreenPowerBIProps {
   reportType: 'vigilancia' | 'repasses' | 'atencao';
@@ -19,27 +18,38 @@ export const FullScreenPowerBI: React.FC<FullScreenPowerBIProps> = ({
 
   useEffect(() => {
     const fetchPowerBIUrl = async () => {
-  try {
-    setIsLoading(true);
-    
-    // URL direta para a function
-    const functionUrl = `https://yimjmqkwlptdaswljgty.supabase.co/functions/v1/powerbi-proxy?report=${reportType}`;
-    
-    const response = await fetch(functionUrl);
-    const html = await response.text();
-    
-    // Cria iframe diretamente com a URL da function
-    setPowerBIUrl(functionUrl); 
-    setIsLoading(false);
-    
-  } catch (err) {
-    setError('Erro ao carregar relatório');
-    setIsLoading(false);
-  }
-};
+      try {
+        setIsLoading(true);
+        setError('');
+
+        // URL da Edge Function com o parâmetro
+        const functionUrl = `https://yimjmqkwlptdaswljgty.supabase.co/functions/v1/powerbi-proxy?report=${reportType}`;
+
+        const response = await fetch(functionUrl);
+
+        if (!response.ok) {
+          throw new Error(`Erro HTTP: ${response.status}`);
+        }
+
+        // Recebe o HTML da Edge Function
+        const html = await response.text();
+        
+        // Cria URL blob para o HTML
+        const blob = new Blob([html], { type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+        
+        setPowerBIUrl(url);
+        setIsLoading(false);
+        
+      } catch (err) {
+        console.error('Error:', err);
+        setError('Erro ao carregar o relatório.');
+        setIsLoading(false);
+      }
+    };
+
     fetchPowerBIUrl();
 
-    // Cleanup
     return () => {
       if (powerBIUrl) {
         URL.revokeObjectURL(powerBIUrl);
@@ -100,8 +110,6 @@ export const FullScreenPowerBI: React.FC<FullScreenPowerBIProps> = ({
               allowFullScreen
               title={title}
               sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
-              onLoad={() => console.log('Iframe loaded successfully')}
-              onError={(e) => console.error('Iframe error:', e)}
             />
           </div>
         )}
