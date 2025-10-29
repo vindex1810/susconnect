@@ -65,7 +65,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 />
               </div>
               
-              {/* User Info and Actions */}
+              {/* User Info and Logout */}
               <div className="flex items-center space-x-4">
                 {userEmail && (
                   <div className="flex items-center space-x-3">
@@ -77,19 +77,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                       </span>
                     </div>
                     
-                    {/* Separador */}
-                    <div className="w-px h-6 bg-blue-400/50"></div>
-                    
-                    {/* Botão do Mapa UBS */}
-                    <button
-                      onClick={openUBSMap}
-                      className="flex items-center space-x-2 bg-green-600/80 hover:bg-green-700/80 px-3 py-2 rounded-lg transition-colors duration-200 backdrop-blur-sm"
-                      title="Mapa Territorial das UBSs"
-                    >
-                      <Map size={16} className="text-white" />
-                      <span className="text-sm font-medium text-white">Mapa UBS</span>
-                    </button>
-
                     {/* Separador */}
                     <div className="w-px h-6 bg-blue-400/50"></div>
                     
@@ -227,15 +214,16 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               </p>
             </div>
             
-            <div className="text-center">
-              <div className="w-12 h-12 bg-gradient-to-r from-green-400 to-blue-400 rounded-full flex items-center justify-center mx-auto mb-4">
-                <MapPin size={24} className="text-white" />
+            {/* Novo card para o Mapa Territorial das UBSs */}
+            <button onClick={openUBSMap} className="text-center group">
+              <div className="w-12 h-12 bg-gradient-to-r from-green-400 to-blue-400 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:opacity-90 transition-opacity">
+                <Map size={24} className="text-white" />
               </div>
-              <h4 className="text-lg font-semibold mb-2">Foco Regional</h4>
+              <h4 className="text-lg font-semibold mb-2">Mapa Territorial das UBSs</h4>
               <p className="text-blue-200 text-sm">
-                Especializado nas necessidades específicas de Dourados/MS
+                Acesse o mapa das Unidades Básicas de Saúde
               </p>
-            </div>
+            </button>
           </div>
         </main>
 
