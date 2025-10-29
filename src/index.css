@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Esconder elementos do Bolt */
+[class*="bolt"], a[href*="bolt.host"] {
+  display: none !important;
+}
