@@ -28,6 +28,8 @@ function App() {
       setIsAuthenticated(!!session);
       if (session?.user?.email) {
         setCurrentUser(session.user.email);
+      } else {
+        setCurrentUser('');
       }
     });
 
