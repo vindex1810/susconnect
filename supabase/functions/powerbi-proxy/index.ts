@@ -7,9 +7,9 @@ const corsHeaders = {
 };
 
 const powerBIUrls = {
-  vigilancia: "https://app.powerbi.com/view?r=eyJrIjoiZTcwZjY5ZDAtMzA5YS00MWIyLTg3ZjAtOTAwZDY1YzYxNmQ5IiwidCI6IjdhNjI3NmU5LTM0NzgtNGM0NS04YjM2LWY0YjNlN2NlYzQ5OSJ9",
-  repasses: "https://app.powerbi.com/view?r=eyJrIjoiZTcwZjY5ZDAtMzA5YS00MWIyLTg3ZjAtOTAwZDY1YzYxNmQ5IiwidCI6IjdhNjI3NmU5LTM0NzgtNGM0NS04YjM2LWY0YjNlN2NlYzQ5OSJ9",
-  atencao: "https://app.powerbi.com/view?r=eyJrIjoiZTcwZjY5ZDAtMzA5YS00MWIyLTg3ZjAtOTAwZDY1YzYxNmQ5IiwidCI6IjdhNjI3NmU5LTM0NzgtNGM0NS04YjM2LWY0YjNlN2NlYzQ5OSJ9"
+  vigilancia: "https://app.powerbi.com/view?r=eyJrIjoiZjY2YTUwM2QtMWQyZS00MDQ2LWE5NDctMGRjYWFmZTU3YjQwIiwidCI6IjVkOGE4N2Q5LTZkODAtNDM5My05ZjNkLTUyOWE3MjU1MmQ3ZiJ9",
+  repasses: "https://app.powerbi.com/view?r=eyJrIjoiNzRmODJmZDEtYzFkZS00MjkyLWEwMDYtNzRhNzJiMjAxZWMwIiwidCI6IjVkOGE4N2Q5LTZkODAtNDM5My05ZjNkLTUyOWE3MjU1MmQ3ZiJ9",
+  atencao: "https://app.powerbi.com/view?r=eyJrIjoiYzIyZTdiOTMtN2QxMS00NDcyLWJkZDEtNjdkM2M0MjNlMDNmIiwidCI6IjVkOGE4N2Q5LTZkODAtNDM5My05ZjNkLTUyOWE3MjU1MmQ3ZiJ9"
 };
 
 Deno.serve(async (req: Request) => {
