@@ -6,11 +6,10 @@ import {
   AlertTriangle,
   Menu,
   Activity,
-  Shield,
-  MapPin,
   LogOut,
   Mail,
-  Map
+  Map,
+  Layers
 } from 'lucide-react';
 
 interface LandingPageProps {
@@ -36,6 +35,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
   const openUBSMap = () => {
     window.open('https://www.google.com/maps/d/u/0/viewer?hl=pt-BR&mid=1aOdQQ9s9vBtyibgLy5cPTEMU2Oqq6mw&ll=-22.23198731693114%2C-54.83619882987065&z=13', '_blank');
+  };
+
+  const openCCZMaps = () => {
+    window.open('https://drive.google.com/drive/folders/14VBRXCmS_pviSqblQ01VBtlhthwnae6P', '_blank');
   };
 
   return (
@@ -204,24 +207,31 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               </p>
             </div>
             
-            <div className="text-center">
-              <div className="w-12 h-12 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Shield size={24} className="text-white" />
+            {/* Substituído "Dados Seguros" por "Mapas CCZ" */}
+            <button 
+              onClick={openCCZMaps}
+              className="text-center group cursor-pointer"
+            >
+              <div className="w-12 h-12 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-200">
+                <Layers size={24} className="text-white" />
               </div>
-              <h4 className="text-lg font-semibold mb-2">Dados Seguros</h4>
+              <h4 className="text-lg font-semibold mb-2 text-white">Mapas CCZ</h4>
               <p className="text-blue-200 text-sm">
-                Todas as informações são protegidas seguindo as normas do SUS
+                Mapas territoriais por áreas específicas dos agentes de endemias
               </p>
-            </div>
+            </button>
             
-            {/* Novo card para o Mapa Territorial das UBSs */}
-            <button onClick={openUBSMap} className="text-center group">
-              <div className="w-12 h-12 bg-gradient-to-r from-green-400 to-blue-400 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:opacity-90 transition-opacity">
+            {/* Mapa Territorial das UBSs */}
+            <button 
+              onClick={openUBSMap}
+              className="text-center group cursor-pointer"
+            >
+              <div className="w-12 h-12 bg-gradient-to-r from-teal-400 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-200">
                 <Map size={24} className="text-white" />
               </div>
-              <h4 className="text-lg font-semibold mb-2">Mapa Territorial das UBSs</h4>
+              <h4 className="text-lg font-semibold mb-2 text-white">Mapa Territorial das UBSs</h4>
               <p className="text-blue-200 text-sm">
-                Acesse o mapa das Unidades Básicas de Saúde
+                Acesse o mapa das Unidades Básicas de Saúde de Dourados
               </p>
             </button>
           </div>
