@@ -4,13 +4,13 @@ import { resolve } from 'path'
 
 export default defineConfig({
   plugins: [react()],
-  root: 'src/',
+  root: 'susconnect/',
   build: {
     outDir: '../../dist',
     emptyOutDir: true,
     rollupOptions: {
       input: {
-        main: resolve(__dirname, 'src/index.html')
+        main: resolve(__dirname, 'index.html')
       }
     }
   },
